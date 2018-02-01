@@ -1,0 +1,12 @@
+sudo: required
+language: python
+python:
+  - "3.6"
+before_install:
+  - pip install pipenv
+install:
+  - pipenv install -d --system
+script:
+  - flake8
+  - coverage run --include=decision_engine/* --omit=tests/* -m pytest
+  - coverage report
