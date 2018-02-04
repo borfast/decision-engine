@@ -8,5 +8,6 @@ install:
   - pipenv install -d --system
 script:
   - flake8
+  - mypy decision_engine/*.py
   - coverage run --include=decision_engine/* --omit=tests/* -m pytest
   - coverage report

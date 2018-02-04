@@ -5,7 +5,7 @@ from decision_engine.sources import Source
 
 class Rule:
     def __init__(self, source1: Source, source2: Source,
-                 comparison: Comparison):
+                 comparison: Comparison) -> None:
         self.source1 = source1
         self.source2 = source2
         self.comparison = comparison

@@ -14,7 +14,7 @@ from decision_engine.sources import DictSource, FixedValueSource, \
     (10000, False)
 ])
 def test_single_rule_engine(salary, expected):
-    salary_percentage = PercentageSource('0.75', DictSource('salary'))
+    salary_percentage = PercentageSource(0.75, DictSource('salary'))
     minimum_salary = FixedValueSource(50000)
     rule = Rule(salary_percentage, minimum_salary, GreaterThanOrEqual())
     engine = Engine([rule])
@@ -37,22 +37,22 @@ def test_single_rule_engine(salary, expected):
 ])
 def test_multiple_rules_engine(air_miles, land_miles, age, vip, expected):
     air_miles_source = DictSource('air_miles')
-    minimum_miles = FixedValueSource(3500)
-    rule1 = Rule(air_miles_source, minimum_miles, GreaterThanOrEqual())
+    minimum_miles_source = FixedValueSource(3500)
+    rule1 = Rule(air_miles_source, minimum_miles_source, GreaterThanOrEqual())
 
     land_miles_source = DictSource('land_miles')
     rule2 = Rule(land_miles_source, air_miles_source, LessThanOrEqual())
 
     age_source = DictSource('age')
-    minimum_age = FixedValueSource(21)
-    rule3 = Rule(age_source, minimum_age, GreaterThanOrEqual())
+    minimum_age_source = FixedValueSource(21)
+    rule3 = Rule(age_source, minimum_age_source, GreaterThanOrEqual())
 
-    maximum_age = FixedValueSource(65)
-    rule4 = Rule(age_source, maximum_age, LessThanOrEqual())
+    maximum_age_source = FixedValueSource(65)
+    rule4 = Rule(age_source, maximum_age_source, LessThanOrEqual())
 
-    vip_status = DictSource('vip')
+    vip_status_source = DictSource('vip')
     positive_vip_status = FixedValueSource('yes')
-    rule5 = Rule(vip_status, positive_vip_status, Equal())
+    rule5 = Rule(vip_status_source, positive_vip_status, Equal())
 
     engine = Engine([rule1, rule2, rule3, rule4, rule5])
 

@@ -6,9 +6,9 @@ from decision_engine.rules import Rule
 
 
 class Engine:
-    rules = []
+    rules: List = []
 
-    def __init__(self, rules: List[Rule]):
+    def __init__(self, rules: List[Rule]) -> None:
         self.rules = rules
 
     # def add_rule(self, rule: Comparison, operator: str):
