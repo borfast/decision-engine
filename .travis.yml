@@ -11,3 +11,5 @@ script:
   - mypy decision_engine/*.py
   - coverage run --include=decision_engine/* --omit=tests/* -m pytest
   - coverage report
+after_success:
+  - codecov
