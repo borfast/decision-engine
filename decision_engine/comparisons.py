@@ -15,6 +15,11 @@ class Equal(Comparison):
         return x == y
 
 
+class NotEqual(Comparison):
+    def check(self, x: Any, y: Any) -> bool:
+        return x != y
+
+
 class GreaterThan(Comparison):
     def check(self, x: Any, y: Any) -> bool:
         return x > y
