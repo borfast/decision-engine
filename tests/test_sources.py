@@ -25,6 +25,6 @@ def test_percentage_value_source():
     data = {
         'test_value': 100000
     }
-    src = PercentageSource('0.75', DictSource('test_value'))
+    src = PercentageSource(0.75, DictSource('test_value'))
 
     assert src.get_value(data) == test_value
