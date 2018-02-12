@@ -17,6 +17,7 @@ pytest = "*"
 monkeytype = "*"
 mypy = "*"
 codecov = "*"
+codacy-coverage = "*"
 
 
 [requires]

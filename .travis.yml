@@ -1,15 +1,15 @@
-sudo: required
 language: python
 python:
   - "3.6"
 before_install:
   - pip install pipenv
 install:
-  - pipenv install -d --system
+  - pipenv install --dev
 script:
   - flake8
   - mypy decision_engine/*.py
   - coverage run --include=decision_engine/* --omit=tests/* -m pytest
-  - coverage report
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
 after_success:
   - codecov
