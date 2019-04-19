@@ -15,6 +15,8 @@ class DictSource(Source):
         self.key = key
 
     def get_value(self, data: Optional[dict] = None) -> Any:
+        if data is None:
+            return None
         return data[self.key]
 
 
