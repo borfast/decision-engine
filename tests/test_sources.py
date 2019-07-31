@@ -1,6 +1,6 @@
 # coding=utf-8
 from decision_engine.sources import DictSource, FixedValueSource, \
-    PercentageSource
+    PercentageSource, RandomIntSource
 
 
 def test_dict_source():
@@ -28,3 +28,12 @@ def test_percentage_value_source():
     src = PercentageSource(0.75, DictSource('test_value'))
 
     assert src.get_value(data) == test_value
+
+
+def test_random_int_source():
+    max_test_value = 120
+    min_test_value = 12
+
+    src = RandomIntSource(min_test_value, max_test_value)
+
+    assert min_test_value <= src.get_value() <= max_test_value

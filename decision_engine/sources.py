@@ -1,4 +1,5 @@
 # coding=utf-8
+import random
 from typing import Optional, Any
 
 from abc import ABC, abstractmethod
@@ -35,3 +36,16 @@ class PercentageSource(Source):
 
     def get_value(self, data: Optional[dict] = None) -> float:
         return self.source.get_value(data) * self.percentage
+
+
+class RandomIntSource(Source):
+    def __init__(self, min_value: int, max_value: int, seed: int = None):
+        self.min_value = min_value
+        self.max_value = max_value
+        self.seed = seed
+
+    def get_value(self, data: Optional[dict] = None):
+        if self.seed is not None:
+            random.seed(self.seed)
+
+        return random.randint(self.min_value, self.max_value)
