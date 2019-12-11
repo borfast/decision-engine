@@ -9,6 +9,17 @@ from decision_engine.sources import DictSource, FixedValueSource, \
     PercentageSource
 
 
+def test_single_stupid_rule_engine():
+    hundred = FixedValueSource(100)
+    five_thousand = FixedValueSource(5000)
+    rule = SimpleRule(five_thousand, hundred, GreaterThanOrEqual())
+    engine = Engine([rule])
+
+    data = {}
+
+    assert engine.decide(data) is True
+
+
 @pytest.mark.parametrize("salary, expected", [
     (100000, True),
     (10000, False)
