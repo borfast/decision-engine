@@ -1,0 +1,31 @@
+{
+  "sources": [
+    {
+      "name": "hundred",
+      "class": "FixedValueSource",
+      "params": [
+        100
+      ]
+    },
+    {
+      "name": "five_thousand",
+      "class": "FixedValueSource",
+      "params": [
+        5000
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "name": "rule",
+      "class": "SimpleRule",
+      "sources": ["five_thousand", "hundred"]
+    }
+  ],
+  "engines": [
+    {
+      "name": "simple_engine",
+      "rules": ["rule"]
+    }
+  ]
+}
