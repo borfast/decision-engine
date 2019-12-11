@@ -1,16 +1,11 @@
 [[source]]
-
 name = "pypi"
 verify_ssl = true
 url = "https://pypi.python.org/simple"
 
-
 [packages]
 
-
-
 [dev-packages]
-
 coverage = "*"
 pytest = "*"
 "flake8" = "*"
@@ -19,7 +14,5 @@ mypy = "*"
 codecov = "*"
 codacy-coverage = "*"
 
-
 [requires]
-
-python_version = "3.7"
+python_version = "3.8"
