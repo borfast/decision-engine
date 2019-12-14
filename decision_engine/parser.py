@@ -51,7 +51,10 @@ def parse_rules(rules: List[dict], sources: List[Source]) -> List[Rule]:
         comparison_class = getattr(comparisons_module, rule['comparison'])
 
         # Create a new list containing only the sources named in the rule.
-        rule_sources = [source for source in sources if source.name in rule['sources']]
+        rule_sources = [
+            source for source in sources
+            if source.name in rule['sources']
+        ]
 
         instance = rules_class(*rule_sources, comparison_class(), rule['name'])
         final_rules.append(instance)

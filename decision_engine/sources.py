@@ -35,7 +35,9 @@ class FixedValueSource(Source):
 
 
 class PercentageSource(Source):
-    def __init__(self, percentage: float, source: Source, name: str = None) -> None:
+    def __init__(
+        self, percentage: float, source: Source, name: str = None
+    ) -> None:
         self.percentage = float(percentage)
         self.source = source
         super().__init__(name)
@@ -45,7 +47,13 @@ class PercentageSource(Source):
 
 
 class RandomIntSource(Source):
-    def __init__(self, min_value: int, max_value: int, seed: int = None, name: str = None):
+    def __init__(
+        self,
+        min_value: int,
+        max_value: int,
+        seed: int = None,
+        name: str = None,
+    ):
         self.min_value = min_value
         self.max_value = max_value
         self.seed = seed

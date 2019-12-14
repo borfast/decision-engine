@@ -8,7 +8,8 @@ from decision_engine import parser
 
 
 schema_file = 'schema.json'
-schema_path = (Path(__file__).parents[1] / 'decision_engine' / schema_file).absolute()
+schema_dir = Path(__file__).parents[1] / 'decision_engine'
+schema_path = (schema_dir / schema_file).absolute()
 test_definition = 'test_definition.json'
 definition_path = (Path(__file__).parents[0] / test_definition).absolute()
 
