@@ -9,7 +9,6 @@ from decision_engine import parser
 
 schema_file = 'schema.json'
 schema_path = (Path(__file__).parents[1] / 'decision_engine' / schema_file).absolute()
-print(schema_path)
 test_definition = 'test_definition.json'
 definition_path = (Path(__file__).parents[0] / test_definition).absolute()
 
@@ -20,18 +19,27 @@ def load_json_file(file: str):
     return contents
 
 
+def test_sources_parsed_correctly():
+    definition = load_json_file(definition_path)
+    sources = parser.parse_sources(definition['sources'])
+    assert len(sources) == 2
+
+
+# def test_final_engine_works_correctly():
+#     pass
+
 # These are probably not needed, since what we're really doing here is
 # testing jsonschema's package validation capabilities, which should be
 # done in its own package, not here.
 def test_validation_passes_with_valid_definition():
     schema = load_json_file(schema_path)
-    definition: dict = load_json_file(definition_path)
+    definition = load_json_file(definition_path)
     parser.validate(definition, schema)
 
 
 def test_validation_fails_with_invalid_definition():
     schema = load_json_file(schema_path)
-    definition: dict = load_json_file(definition_path)
+    definition = load_json_file(definition_path)
 
     definition_without_sources = definition.copy()
     del definition_without_sources['sources']
