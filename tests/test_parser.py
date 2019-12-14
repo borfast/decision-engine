@@ -38,8 +38,16 @@ def test_rules_parsed_correctly():
         assert type(rules[i]).__name__ == definition['rules'][i]['class']
 
 
-# def test_final_engine_works_correctly():
-#     pass
+def test_engines_parsed_correctly():
+    definition = load_json_file(definition_path)
+    sources = parser.parse_sources(definition['sources'])
+    rules = parser.parse_rules(definition['rules'], sources)
+    engines = parser.parse_engines(definition['engines'], rules)
+    assert len(engines) == len(definition['engines'])
+    for i in range(len(definition['engines'])):
+        assert engines[i].name == definition['engines'][i]['name']
+        assert len(engines[i].rules) == len(rules)
+
 
 # These are probably not needed, since what we're really doing here is
 # testing jsonschema's package validation capabilities, which should be

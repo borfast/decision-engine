@@ -5,13 +5,7 @@ from typing import List
 
 import jsonschema
 
-
-# TODO: Make sure the classes specified in the schema exist in Python.
-#  Perhaps that part of the schema should be generated automatically.
-
-# TODO: iterate over rules and create each rule,
-#  iterate over engines and create each engine,
-#  make parsing recursive for composition.
+from decision_engine.engine import Engine
 from decision_engine.rules import Rule
 from decision_engine.sources import Source
 
@@ -27,6 +21,11 @@ def validate(definition: dict, schema: dict):
 
 
 def parse_sources(sources: List[dict]) -> List[Source]:
+    """
+    TODO: Make sure the classes specified in the schema exist in Python.
+          Perhaps that part of the schema should be generated automatically.
+    TODO: make parsing recursive for composition.
+    """
     final_sources = []
     module = importlib.import_module('decision_engine.sources')
     for source in sources:
@@ -39,6 +38,11 @@ def parse_sources(sources: List[dict]) -> List[Source]:
 
 
 def parse_rules(rules: List[dict], sources: List[Source]) -> List[Rule]:
+    """
+    TODO: Make sure the classes specified in the schema exist in Python.
+          Perhaps that part of the schema should be generated automatically.
+    TODO: make parsing recursive for composition.
+    """
     final_rules = []
     rules_module = importlib.import_module('decision_engine.rules')
     comparisons_module = importlib.import_module('decision_engine.comparisons')
@@ -55,17 +59,31 @@ def parse_rules(rules: List[dict], sources: List[Source]) -> List[Rule]:
     return final_rules
 
 
-def parse_json(definition: dict) -> list:
+def parse_engines(engines: List[dict], rules: List[Rule]) -> List[Engine]:
+    final_engines = []
+    for engine in engines:
+        # Create a new list containing only the rules named in the engine.
+        engine_rules = [rule for rule in rules if rule.name in engine['rules']]
+
+        engine = Engine(engine_rules, engine['name'])
+        final_engines.append(engine)
+
+    return final_engines
+
+
+def parse_json(definition: dict) -> dict:
     schema_file = 'schema.json'
     schema_path = (Path(__file__).parents[0] / schema_file).absolute()
     schema = load_json_file(schema_path)
     validate(definition, schema)
 
-    parse_sources(definition['sources'])
+    sources = parse_sources(definition['sources'])
+    rules = parse_rules(definition['rules'], sources)
+    engines = parse_engines(definition['engines'], rules)
 
-    return []
+    return {'sources': sources, 'rules': rules, 'engines': engines}
 
 
-def parse_json_file(file: str) -> list:
+def parse_json_file(file: str) -> dict:
     definition = load_json_file(file)
     return parse_json(definition)
