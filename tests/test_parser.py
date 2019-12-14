@@ -13,7 +13,7 @@ test_definition = 'test_definition.json'
 definition_path = (Path(__file__).parents[0] / test_definition).absolute()
 
 
-def load_json_file(file: str):
+def load_json_file(file: str) -> dict:
     with (open(file)) as fp:
         contents = json.load(fp)
     return contents
@@ -22,7 +22,20 @@ def load_json_file(file: str):
 def test_sources_parsed_correctly():
     definition = load_json_file(definition_path)
     sources = parser.parse_sources(definition['sources'])
-    assert len(sources) == 2
+    assert len(sources) == len(definition['sources'])
+    for i in range(len(definition['sources'])):
+        assert sources[i].name == definition['sources'][i]['name']
+        assert type(sources[i]).__name__ == definition['sources'][i]['class']
+
+
+def test_rules_parsed_correctly():
+    definition = load_json_file(definition_path)
+    sources = parser.parse_sources(definition['sources'])
+    rules = parser.parse_rules(definition['rules'], sources)
+    assert len(rules) == len(definition['rules'])
+    for i in range(len(definition['rules'])):
+        assert rules[i].name == definition['rules'][i]['name']
+        assert type(rules[i]).__name__ == definition['rules'][i]['class']
 
 
 # def test_final_engine_works_correctly():
