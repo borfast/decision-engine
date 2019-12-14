@@ -19,7 +19,8 @@
     {
       "name": "rule",
       "class": "SimpleRule",
-      "sources": ["five_thousand", "hundred"]
+      "sources": ["five_thousand", "hundred"],
+      "comparison": "GreaterThanOrEqual"
     }
   ],
   "engines": [

@@ -1,12 +1,16 @@
 import json
 
-# TODO: validate that each engine name is unique,
+import jsonschema
+
+
+# TODO: make parser use validation automatically,
+#  make validator throw exception,
 #  iterate over sources and create each Source,
 #  iterate over rules and create each rule.
 
 
-def parse_from_file(file_path: str) -> dict:
-    with (open(file_path)) as fp:
-        definition = json.load(fp)
+def validate(definition: dict, schema: dict):
+    print(definition)
 
-    return definition
+    jsonschema.validate(instance=definition, schema=schema)
+

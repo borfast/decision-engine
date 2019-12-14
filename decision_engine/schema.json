@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/borfast/decision-engine/tree/master/decision_engine/schema.json",
+  "title": "Decision Engine Definition",
+  "description": "A definition used to generate an instance of a decision engine.",
+  "type": "object",
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The unique name for a source.",
+            "type": "string"
+          },
+          "class": {
+            "description": "The Python class to be used for this source.",
+            "type": "string"
+          },
+          "params": {
+            "description": "The parameters to be passed to this source's constructor.",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "class",
+          "params"
+        ]
+      }
+    },
+
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The unique name for a rule.",
+            "type": "string"
+          },
+          "class": {
+            "description": "The Python class to be used for this rule.",
+            "type": "string"
+          },
+          "sources": {
+            "description": "The sources to be used with this rule.",
+            "type": "array"
+          },
+          "comparison": {
+            "description": "The comparison to be made between the two given sources.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "class",
+          "sources",
+          "comparison"
+        ]
+      }
+    },
+
+    "engines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The unique name for an engine.",
+            "type": "string"
+          },
+          "rules": {
+            "description": "The rules to be evaluated for the engine to make decisions.",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "rules"
+        ]
+      }
+    }
+  },
+  "required": ["sources", "rules", "engines"]
+}
