@@ -68,8 +68,8 @@ def parse_engines(engines: List[dict], rules: List[Rule]) -> List[Engine]:
         # Create a new list containing only the rules named in the engine.
         engine_rules = [rule for rule in rules if rule.name in engine['rules']]
 
-        engine = Engine(engine_rules, engine['name'])
-        final_engines.append(engine)
+        instance = Engine(engine_rules, engine['name'])
+        final_engines.append(instance)
 
     return final_engines
 
@@ -77,7 +77,7 @@ def parse_engines(engines: List[dict], rules: List[Rule]) -> List[Engine]:
 def parse_json(definition: dict) -> dict:
     schema_file = 'schema.json'
     schema_path = (Path(__file__).parents[0] / schema_file).absolute()
-    schema = load_json_file(schema_path)
+    schema = load_json_file(str(schema_path))
     validate(definition, schema)
 
     sources = parse_sources(definition['sources'])
