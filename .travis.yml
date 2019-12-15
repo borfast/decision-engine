@@ -8,7 +8,7 @@ install:
   - pipenv install --dev
 script:
   - flake8
-  - mypy decision_engine/*.py
+  - mypy --ignore-missing-imports decision_engine/*.py
   - coverage run --include=decision_engine/* --omit=tests/* -m pytest
   - coverage xml
   - python-codacy-coverage -r coverage.xml
