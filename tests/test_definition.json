@@ -18,7 +18,7 @@
   "rules": [
     {
       "name": "rule",
-      "class": "SimpleRule",
+      "class": "SimpleComparisonRule",
       "sources": ["five_thousand", "hundred"],
       "comparison": "GreaterThanOrEqual"
     }

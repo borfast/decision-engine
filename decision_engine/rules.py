@@ -1,5 +1,6 @@
 # coding=utf-8
 from abc import abstractmethod
+from typing import List
 
 from decision_engine.comparisons import Comparison
 from decision_engine.sources import Source
@@ -14,7 +15,7 @@ class Rule:
         pass
 
 
-class SimpleRule(Rule):
+class SimpleComparisonRule(Rule):
     def __init__(self, source1: Source, source2: Source,
                  comparison: Comparison, name: str = None) -> None:
         self.source1 = source1
@@ -29,20 +30,18 @@ class SimpleRule(Rule):
 
 
 class BooleanOrRule(Rule):
-    def __init__(self, rule1: Rule, rule2: Rule, name: str = None) -> None:
-        self.rule1 = rule1
-        self.rule2 = rule2
+    def __init__(self, rules: List[Rule], name: str = None) -> None:
+        self.rules = rules
         super().__init__(name)
 
     def check(self, data: dict) -> bool:
-        return self.rule1.check(data) or self.rule2.check(data)
+        return any([rule.check(data) for rule in self.rules])
 
 
 class BooleanAndRule(Rule):
-    def __init__(self, rule1: Rule, rule2: Rule, name: str = None) -> None:
-        self.rule1 = rule1
-        self.rule2 = rule2
+    def __init__(self, rules: List[Rule], name: str = None) -> None:
+        self.rules = rules
         super().__init__(name)
 
     def check(self, data: dict) -> bool:
-        return self.rule1.check(data) and self.rule2.check(data)
+        return all([rule.check(data) for rule in self.rules])

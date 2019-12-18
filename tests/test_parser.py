@@ -50,15 +50,19 @@ def test_engines_parsed_correctly():
         assert len(engines[i].rules) == len(rules)
 
 
-# These are probably not needed, since what we're really doing here is
-# testing jsonschema's package validation capabilities, which should be
-# done in its own package, not here.
-def test_validation_passes_with_valid_definition():
+def test_valid_test_definition():
+    """
+    Make sure our test definition is valid,
+    otherwise there's no point in using it for testing.
+    """
     schema = load_json_file(schema_path)
     definition = load_json_file(definition_path)
     parser.validate(definition, schema)
 
 
+# These are probably not needed, since what we're really doing here is
+# testing that jsonschema validates correctly, which should be done in
+# its own package, not here.
 def test_validation_fails_with_invalid_definition():
     schema = load_json_file(schema_path)
     definition = load_json_file(definition_path)
