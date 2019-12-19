@@ -7,21 +7,31 @@ from jsonschema import ValidationError
 from decision_engine import parser
 
 
+tests_dir = Path(__file__).parents[0]
+schema_dir = tests_dir.parents[0] / 'decision_engine'
+
 schema_file = 'schema.json'
-schema_dir = Path(__file__).parents[1] / 'decision_engine'
 schema_path = (schema_dir / schema_file).absolute()
+
 test_definition = 'test_definition.json'
-definition_path = (Path(__file__).parents[0] / test_definition).absolute()
+definition_path = (tests_dir / test_definition).absolute()
+
+nested_sources_def = 'test_nested_sources.json'
+nested_sources_def_path = (tests_dir / nested_sources_def)
 
 
-def load_json_file(file: str) -> dict:
+def _load_json_file(file: str) -> dict:
     with (open(file)) as fp:
         contents = json.load(fp)
     return contents
 
 
-def test_sources_parsed_correctly():
-    definition = load_json_file(definition_path)
+@pytest.mark.parametrize('definition_file', [
+    definition_path,
+    nested_sources_def_path
+])
+def test_sources_parsed_correctly(definition_file):
+    definition = _load_json_file(definition_file)
     sources = parser.parse_sources(definition['sources'])
     assert len(sources) == len(definition['sources'])
     for i in range(len(definition['sources'])):
@@ -30,7 +40,7 @@ def test_sources_parsed_correctly():
 
 
 def test_rules_parsed_correctly():
-    definition = load_json_file(definition_path)
+    definition = _load_json_file(definition_path)
     sources = parser.parse_sources(definition['sources'])
     rules = parser.parse_rules(definition['rules'], sources)
     assert len(rules) == len(definition['rules'])
@@ -40,7 +50,7 @@ def test_rules_parsed_correctly():
 
 
 def test_engines_parsed_correctly():
-    definition = load_json_file(definition_path)
+    definition = _load_json_file(definition_path)
     sources = parser.parse_sources(definition['sources'])
     rules = parser.parse_rules(definition['rules'], sources)
     engines = parser.parse_engines(definition['engines'], rules)
@@ -55,8 +65,8 @@ def test_valid_test_definition():
     Make sure our test definition is valid,
     otherwise there's no point in using it for testing.
     """
-    schema = load_json_file(schema_path)
-    definition = load_json_file(definition_path)
+    schema = _load_json_file(schema_path)
+    definition = _load_json_file(definition_path)
     parser.validate(definition, schema)
 
 
@@ -64,8 +74,8 @@ def test_valid_test_definition():
 # testing that jsonschema validates correctly, which should be done in
 # its own package, not here.
 def test_validation_fails_with_invalid_definition():
-    schema = load_json_file(schema_path)
-    definition = load_json_file(definition_path)
+    schema = _load_json_file(schema_path)
+    definition = _load_json_file(definition_path)
 
     definition_without_sources = definition.copy()
     del definition_without_sources['sources']

@@ -4,14 +4,34 @@
       "name": "hundred",
       "class": "FixedValueSource",
       "params": [
-        100
+        {
+          "type": "integer",
+          "value": 100
+        }
       ]
     },
     {
       "name": "five_thousand",
       "class": "FixedValueSource",
       "params": [
-        5000
+        {
+          "type": "integer",
+          "value": 5000
+        }
+      ]
+    },
+    {
+      "name": "ten_percent",
+      "class": "PercentageSource",
+      "params": [
+        {
+          "type": "float",
+          "value": 0.75
+        },
+        {
+          "type": "source",
+          "value": "five_thousand"
+        }
       ]
     }
   ],

@@ -4,10 +4,20 @@ from pathlib import Path
 from typing import List
 
 import jsonschema
+from jsonschema import ValidationError
 
 from decision_engine.engine import Engine
 from decision_engine.rules import Rule
 from decision_engine.sources import Source
+
+
+param_types_table = {
+    'boolean': bool,
+    'float': float,
+    'integer': int,
+    'string': str,
+    'source': str
+}
 
 
 def load_json_file(file: str):
@@ -20,29 +30,52 @@ def validate(definition: dict, schema: dict):
     jsonschema.validate(instance=definition, schema=schema)
 
 
+def _find_source(name: str, sources: List[Source]) -> Source:
+    for source in sources:
+        if source.name == name:
+            return source
+
+    raise Exception(f'Source named {name} not found.')
+
+
+def _parse_params(params: dict, parsed_sources: List[Source]) -> list:
+    result = []
+    parsed_sources_names = [source.name for source in parsed_sources]
+    for param in params:
+        param_type = param_types_table[param['type']]
+        if type(param['value']) != param_type:
+            msg = f"Parameter declared with type {param['type']}" \
+                  f"(Python type {param_type}) " \
+                  f"but value is of type {type(param['value']).__name__}."
+            raise ValidationError(msg)
+
+        if param['type'] == 'source':
+            if param['value'] not in parsed_sources_names:
+                msg = f'Parameter declared as source but specified source ' \
+                      f'{param["value"]} has not been parsed yet. ' \
+                      f'Please rectify your definition file.'
+                raise ValidationError(msg)
+            param['value'] = _find_source(param['value'], parsed_sources)
+
+        result.append(param['value'])
+
+    return result
+
+
 def parse_sources(sources: List[dict]) -> List[Source]:
-    """
-    TODO: Make sure the classes specified in the schema exist in Python.
-          Perhaps that part of the schema should be generated automatically.
-    TODO: make parsing recursive for composition.
-    """
-    final_sources = []
+    final_sources: List[Source] = []
     module = importlib.import_module('decision_engine.sources')
     for source in sources:
         class_name = source['class']
         class_ = getattr(module, class_name)
-        instance = class_(*source['params'], source['name'])
+        params = _parse_params(source['params'], final_sources)
+        instance = class_(*params, source['name'])
         final_sources.append(instance)
 
     return final_sources
 
 
 def parse_rules(rules: List[dict], sources: List[Source]) -> List[Rule]:
-    """
-    TODO: Make sure the classes specified in the schema exist in Python.
-          Perhaps that part of the schema should be generated automatically.
-    TODO: make parsing recursive for composition.
-    """
     final_rules = []
     rules_module = importlib.import_module('decision_engine.rules')
     comparisons_module = importlib.import_module('decision_engine.comparisons')

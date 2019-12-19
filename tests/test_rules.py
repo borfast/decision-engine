@@ -2,7 +2,8 @@
 import pytest
 
 from decision_engine.comparisons import Equal, GreaterThanOrEqual
-from decision_engine.rules import SimpleComparisonRule, BooleanOrRule, BooleanAndRule
+from decision_engine.rules import SimpleComparisonRule, BooleanOrRule,\
+    BooleanAndRule
 from decision_engine.sources import DictSource, FixedValueSource
 
 
@@ -30,7 +31,9 @@ def test_simple_comparison_rule(smoker, expected):
     ('black', False)
 ])
 def test_boolean_or_rule(colour, expected):
-    """The colour source must match at least one of the two required colours."""
+    """
+    The colour source must match at least one of the two required colours.
+    """
     colour_source = DictSource('colour')
     colour_requirement1 = FixedValueSource('blue')
     colour_requirement2 = FixedValueSource('red')
@@ -59,10 +62,14 @@ def test_boolean_or_rule(colour, expected):
     (15, True, True, False)
 ])
 def test_boolean_and_rule(age, smoker, voted_for_trump, expected):
-    """Only people 18+ years old, non-smokers, and who did not vote for Trump are allowed."""
+    """
+    Only people 18+ years old, non-smokers,
+    and who did not vote for Trump are allowed.
+    """
     age_source = DictSource('age')
     age_requirement = FixedValueSource(18)
-    rule1 = SimpleComparisonRule(age_source, age_requirement, GreaterThanOrEqual())
+    rule1 = SimpleComparisonRule(age_source, age_requirement,
+                                 GreaterThanOrEqual())
 
     smoker_source = DictSource('smoker')
     smoker_requirement = FixedValueSource(False)

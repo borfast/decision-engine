@@ -1,0 +1,48 @@
+{
+  "sources": [
+    {
+      "name": "outer_source",
+      "class": "PercentageSource",
+      "params": [
+        {
+          "type": "float",
+          "value": 0.75
+        },
+        {
+          "type": "integer",
+          "value": 100
+        }
+      ]
+    },
+    {
+      "name": "middle_source",
+      "class": "PercentageSource",
+      "params": [
+        {
+          "type": "float",
+          "value": 0.75
+        },
+        {
+          "type": "source",
+          "value": "outer_source"
+        }
+      ]
+    },
+    {
+      "name": "inner_source",
+      "class": "PercentageSource",
+      "params": [
+        {
+          "type": "float",
+          "value": 0.75
+        },
+        {
+          "type": "source",
+          "value": "middle_source"
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "engines": []
+}

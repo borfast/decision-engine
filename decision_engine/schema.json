@@ -20,7 +20,20 @@
           },
           "params": {
             "description": "The parameters to be passed to this source's constructor.",
-            "type": "array"
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "description": "Either a static type, like an integer or string, or source.",
+                  "enum": [ "boolean", "float", "integer", "string", "source" ]
+                },
+                "value": {
+                  "description": "A number, a string, or the name of another source, depending on the type.",
+                  "type": [ "boolean", "number", "integer", "string" ]
+                }
+              }
+            }
           }
         },
         "required": [
