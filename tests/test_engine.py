@@ -79,7 +79,8 @@ def test_multiple_rules_engine(air_miles, land_miles, age, vip, expected):
 
     vip_status_source = DictSource('vip')
     positive_vip_status = FixedValueSource('yes')
-    vip_status_rule = SimpleComparisonRule(vip_status_source, positive_vip_status,
+    vip_status_rule = SimpleComparisonRule(vip_status_source,
+                                           positive_vip_status,
                                            Equal())
 
     engine = Engine([
