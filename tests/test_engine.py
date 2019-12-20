@@ -4,7 +4,7 @@ import pytest
 from decision_engine.comparisons import GreaterThanOrEqual, Equal, \
     LessThanOrEqual
 from decision_engine.engine import Engine
-from decision_engine.rules import SimpleComparisonRule
+from decision_engine.rules import SimpleComparisonRule, BooleanAndRule
 from decision_engine.sources import DictSource, FixedValueSource, \
     PercentageSource
 
@@ -50,28 +50,44 @@ def test_single_rule_engine(salary, expected):
 def test_multiple_rules_engine(air_miles, land_miles, age, vip, expected):
     air_miles_source = DictSource('air_miles')
     minimum_miles_source = FixedValueSource(3500)
-    rule1 = SimpleComparisonRule(air_miles_source, minimum_miles_source,
-                                 GreaterThanOrEqual())
+    minimum_air_miles_rule = SimpleComparisonRule(air_miles_source,
+                                                  minimum_miles_source,
+                                                  GreaterThanOrEqual())
 
     land_miles_source = DictSource('land_miles')
-    rule2 = SimpleComparisonRule(land_miles_source, air_miles_source,
-                                 LessThanOrEqual())
+    less_land_than_air_miles_rule = SimpleComparisonRule(land_miles_source,
+                                                         air_miles_source,
+                                                         LessThanOrEqual())
+
+    air_miles_percentage = PercentageSource(0.05, air_miles_source)
+    air_miles_percentage_rule = SimpleComparisonRule(land_miles_source,
+                                                     air_miles_percentage,
+                                                     GreaterThanOrEqual())
+
+    air_and_land_miles_rule = BooleanAndRule([minimum_air_miles_rule,
+                                              less_land_than_air_miles_rule,
+                                              air_miles_percentage_rule])
 
     age_source = DictSource('age')
     minimum_age_source = FixedValueSource(21)
-    rule3 = SimpleComparisonRule(age_source, minimum_age_source,
-                                 GreaterThanOrEqual())
+    minimum_age_rule = SimpleComparisonRule(age_source, minimum_age_source,
+                                            GreaterThanOrEqual())
 
     maximum_age_source = FixedValueSource(65)
-    rule4 = SimpleComparisonRule(age_source, maximum_age_source,
-                                 LessThanOrEqual())
+    maximum_age_rule = SimpleComparisonRule(age_source, maximum_age_source,
+                                            LessThanOrEqual())
 
     vip_status_source = DictSource('vip')
     positive_vip_status = FixedValueSource('yes')
-    rule5 = SimpleComparisonRule(vip_status_source, positive_vip_status,
-                                 Equal())
+    vip_status_rule = SimpleComparisonRule(vip_status_source, positive_vip_status,
+                                           Equal())
 
-    engine = Engine([rule1, rule2, rule3, rule4, rule5])
+    engine = Engine([
+        air_and_land_miles_rule,
+        minimum_age_rule,
+        maximum_age_rule,
+        vip_status_rule
+    ])
 
     data = {
         'air_miles': air_miles,
