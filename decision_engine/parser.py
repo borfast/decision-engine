@@ -10,7 +10,6 @@ from decision_engine.engine import Engine
 from decision_engine.rules import Rule
 from decision_engine.sources import Source
 
-
 param_types_table = {
     'boolean': bool,
     'float': float,
@@ -20,7 +19,7 @@ param_types_table = {
 }
 
 
-def load_json_file(file: str):
+def load_json_file(file: str) -> dict:
     with (open(file)) as fp:
         contents = json.load(fp)
     return contents
@@ -30,32 +29,32 @@ def validate(definition: dict, schema: dict):
     jsonschema.validate(instance=definition, schema=schema)
 
 
-def _find_source(name: str, sources: List[Source]) -> Source:
-    for source in sources:
-        if source.name == name:
-            return source
+def _check_param_type(param: dict):
+    param_type = param_types_table[param['type']]
+    if not isinstance(param['value'], param_type):
+        msg = f"Parameter declared with type {param['type']}" \
+              f"(Python type {param_type}) " \
+              f"but value is of type {type(param['value']).__name__}."
+        raise ValidationError(msg)
 
-    raise Exception(f'Source named {name} not found.')
+
+def _check_source_param_exists(param: dict, sources: dict):
+    if param['value'] not in sources.keys():
+        msg = f'Parameter declared as source but specified source ' \
+              f'{param["value"]} has not been parsed yet. ' \
+              f'Please rectify your definition file.'
+        raise ValidationError(msg)
 
 
 def _parse_params(params: dict, parsed_sources: List[Source]) -> list:
     result = []
-    parsed_sources_names = [source.name for source in parsed_sources]
+    sources_dict = {source.name: source for source in parsed_sources}
     for param in params:
-        param_type = param_types_table[param['type']]
-        if type(param['value']) != param_type:
-            msg = f"Parameter declared with type {param['type']}" \
-                  f"(Python type {param_type}) " \
-                  f"but value is of type {type(param['value']).__name__}."
-            raise ValidationError(msg)
+        _check_param_type(param)
 
         if param['type'] == 'source':
-            if param['value'] not in parsed_sources_names:
-                msg = f'Parameter declared as source but specified source ' \
-                      f'{param["value"]} has not been parsed yet. ' \
-                      f'Please rectify your definition file.'
-                raise ValidationError(msg)
-            param['value'] = _find_source(param['value'], parsed_sources)
+            _check_source_param_exists(param, sources_dict)
+            param['value'] = sources_dict[param['value']]
 
         result.append(param['value'])
 
