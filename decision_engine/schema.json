@@ -57,9 +57,22 @@
             "description": "The Python class to be used for this rule.",
             "type": "string"
           },
-          "sources": {
+          "params": {
             "description": "The sources to be used with this rule.",
-            "type": "array"
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "description": "Whether this parameter is a source or a rule.",
+                  "enum": [ "source", "rule" ]
+                },
+                "value": {
+                  "description": "The source or rule to pass as a parameter.",
+                  "type": "string"
+                }
+              }
+            }
           },
           "comparison": {
             "description": "The comparison to be made between the two given sources.",
@@ -69,7 +82,7 @@
         "required": [
           "name",
           "class",
-          "sources",
+          "params",
           "comparison"
         ]
       }

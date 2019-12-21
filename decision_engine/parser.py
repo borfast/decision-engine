@@ -46,7 +46,7 @@ def _check_source_param_exists(param: dict, sources: dict):
         raise ValidationError(msg)
 
 
-def _parse_params(params: dict, parsed_sources: List[Source]) -> list:
+def _parse_source_params(params: dict, parsed_sources: List[Source]) -> list:
     result = []
     sources_dict = {source.name: source for source in parsed_sources}
     for param in params:
@@ -67,28 +67,59 @@ def parse_sources(sources: List[dict]) -> List[Source]:
     for source in sources:
         class_name = source['class']
         class_ = getattr(module, class_name)
-        params = _parse_params(source['params'], final_sources)
+        params = _parse_source_params(source['params'], final_sources)
         instance = class_(*params, source['name'])
         final_sources.append(instance)
 
     return final_sources
 
 
+def _check_rule_param_exists(param: dict, rules: dict):
+    if param['value'] not in rules.keys():
+        msg = f'Parameter declared as rule but specified rule ' \
+              f'{param["value"]} has not been parsed yet. ' \
+              f'Please rectify your definition file.'
+        raise ValidationError(msg)
+
+
+def _parse_rule_params(params: dict, parsed_rules: List[Rule],
+                       sources: List[Source]) -> list:
+    result = []
+    rules_dict = {rule.name: rule for rule in parsed_rules}
+    sources_dict = {source.name: source for source in sources}
+    for param in params:
+        if param['type'] == 'source':
+            _check_source_param_exists(param, sources_dict)
+            param['value'] = sources_dict[param['value']]
+        elif param['type'] == 'rule':
+            _check_rule_param_exists(param, rules_dict)
+            param['value'] = rules_dict[param['value']]
+
+        result.append(param['value'])
+
+    return result
+
+
 def parse_rules(rules: List[dict], sources: List[Source]) -> List[Rule]:
-    final_rules = []
+    final_rules: List[Rule] = []
     rules_module = importlib.import_module('decision_engine.rules')
     comparisons_module = importlib.import_module('decision_engine.comparisons')
     for rule in rules:
         rules_class = getattr(rules_module, rule['class'])
         comparison_class = getattr(comparisons_module, rule['comparison'])
 
-        # Create a new list containing only the sources named in the rule.
-        rule_sources = [
-            source for source in sources
-            if source.name in rule['sources']
-        ]
+        params = _parse_rule_params(rule['params'], final_rules, sources)
 
-        instance = rules_class(*rule_sources, comparison_class(), rule['name'])
+        # Stupid little hack to allow using a starred expression below.
+        # Boolean rules expect a list of Rules, not Sources, so for those
+        # cases, we first nest the parameters in another list, so that we can
+        # still use *params but still end up with a list.
+        if 'Boolean' in rule['class']:
+            params = [params]
+        else:
+            params.append(comparison_class())
+
+        instance = rules_class(*params, rule['name'])
         final_rules.append(instance)
 
     return final_rules

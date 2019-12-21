@@ -19,6 +19,9 @@ definition_path = (tests_dir / test_definition).absolute()
 nested_sources_def = 'test_nested_sources.json'
 nested_sources_def_path = (tests_dir / nested_sources_def)
 
+full_def = 'full_definition.json'
+full_def_path = (tests_dir / full_def)
+
 
 def _load_json_file(file: str) -> dict:
     with (open(file)) as fp:
@@ -28,7 +31,8 @@ def _load_json_file(file: str) -> dict:
 
 @pytest.mark.parametrize('definition_file', [
     definition_path,
-    nested_sources_def_path
+    nested_sources_def_path,
+    full_def_path
 ])
 def test_sources_parsed_correctly(definition_file):
     definition = _load_json_file(definition_file)
@@ -68,6 +72,32 @@ def test_valid_test_definition():
     schema = _load_json_file(schema_path)
     definition = _load_json_file(definition_path)
     parser.validate(definition, schema)
+
+
+@pytest.mark.parametrize("air_miles, land_miles, age, vip, expected", [
+    (500, 100, 37, 'yes', True),
+    (150, 100, 37, 'yes', False),
+    (500, 501, 37, 'yes', False),
+    (500, 100, 16, 'yes', False),
+    (500, 100, 70, 'yes', False),
+    (500, 100, 37, 'no', False),
+    (10, 50, 15, 'no', False)
+])
+def test_fully_parsed_engine(air_miles, land_miles, age, vip, expected):
+    engines = parser.parse_json_file(full_def_path)
+
+    print(engines)
+
+    engine = engines['engines'][0]
+
+    data = {
+        'air_miles': air_miles,
+        'land_miles': land_miles,
+        'age': age,
+        'vip': vip
+    }
+
+    assert engine.decide(data) == expected
 
 
 # These are probably not needed, since what we're really doing here is

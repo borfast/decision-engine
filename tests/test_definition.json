@@ -39,7 +39,16 @@
     {
       "name": "rule",
       "class": "SimpleComparisonRule",
-      "sources": ["five_thousand", "hundred"],
+      "params": [
+        {
+          "type": "source",
+          "value": "five_thousand"
+        },
+        {
+          "type": "source",
+          "value": "hundred"
+        }
+      ],
       "comparison": "GreaterThanOrEqual"
     }
   ],

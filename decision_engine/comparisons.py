@@ -1,4 +1,3 @@
-# coding=utf-8
 from typing import Any
 
 from abc import ABC, abstractmethod
@@ -8,6 +7,11 @@ class Comparison(ABC):
     @abstractmethod
     def check(self, x: Any, y: Any) -> bool:
         pass
+
+
+class NoOp(Comparison):
+    def check(self, x: Any, y: Any) -> bool:
+        return True
 
 
 class Equal(Comparison):

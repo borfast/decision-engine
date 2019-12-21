@@ -1,0 +1,215 @@
+{
+  "sources": [
+    {
+      "name": "air_miles_source",
+      "class": "DictSource",
+      "params": [
+        {
+          "type": "string",
+          "value": "air_miles"
+        }
+      ]
+    },
+    {
+      "name": "minimum_miles_source",
+      "class": "FixedValueSource",
+      "params": [
+        {
+          "type": "integer",
+          "value": 350
+        }
+      ]
+    },
+    {
+      "name": "land_miles_source",
+      "class": "DictSource",
+      "params": [
+        {
+          "type": "string",
+          "value": "land_miles"
+        }
+      ]
+    },
+    {
+      "name": "air_miles_percentage",
+      "class": "PercentageSource",
+      "params": [
+        {
+          "type": "float",
+          "value": 0.05
+        },
+        {
+          "type": "source",
+          "value": "air_miles_source"
+        }
+      ]
+    },
+    {
+      "name": "age_source",
+      "class": "DictSource",
+      "params": [
+        {
+          "type": "string",
+          "value": "age"
+        }
+      ]
+    },
+    {
+      "name": "minimum_age_source",
+      "class": "FixedValueSource",
+      "params": [
+        {
+          "type": "integer",
+          "value": 21
+        }
+      ]
+    },
+    {
+      "name": "maximum_age_source",
+      "class": "FixedValueSource",
+      "params": [
+        {
+          "type": "integer",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "name": "vip_status_source",
+      "class": "DictSource",
+      "params": [
+        {
+          "type": "string",
+          "value": "vip"
+        }
+      ]
+    },
+    {
+      "name": "positive_vip_status",
+      "class": "FixedValueSource",
+      "params": [
+        {
+          "type": "string",
+          "value": "yes"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "name": "minimum_air_miles_rule",
+      "class": "SimpleComparisonRule",
+      "params": [
+        {
+          "type": "source",
+          "value": "air_miles_source"
+        },
+        {
+          "type": "source",
+          "value": "minimum_miles_source"
+        }
+      ],
+      "comparison": "GreaterThanOrEqual"
+    },
+    {
+      "name": "less_land_than_air_miles_rule",
+      "class": "SimpleComparisonRule",
+      "params": [
+        {
+          "type": "source",
+          "value": "land_miles_source"
+        },
+        {
+          "type": "source",
+          "value": "air_miles_source"
+        }
+      ],
+      "comparison": "LessThanOrEqual"
+    },
+    {
+      "name": "air_miles_percentage_rule",
+      "class": "SimpleComparisonRule",
+      "params": [
+        {
+          "type": "source",
+          "value": "land_miles_source"
+        },
+        {
+          "type": "source",
+          "value": "air_miles_percentage"
+        }
+      ],
+      "comparison": "GreaterThanOrEqual"
+    },
+    {
+      "name": "air_and_land_miles_rule",
+      "class": "BooleanAndRule",
+      "params": [
+        {
+          "type": "rule",
+          "value": "minimum_air_miles_rule"
+        },
+        {
+          "type": "rule",
+          "value": "less_land_than_air_miles_rule"
+        },
+        {
+          "type": "rule",
+          "value": "air_miles_percentage_rule"
+        }
+      ],
+      "comparison": "NoOp"
+    },
+    {
+      "name": "minimum_age_rule",
+      "class": "SimpleComparisonRule",
+      "params": [
+        {
+          "type": "source",
+          "value": "age_source"
+        },
+        {
+          "type": "source",
+          "value": "minimum_age_source"
+        }
+      ],
+      "comparison": "GreaterThanOrEqual"
+    },
+    {
+      "name": "maximum_age_rule",
+      "class": "SimpleComparisonRule",
+      "params": [
+        {
+          "type": "source",
+          "value": "age_source"
+        },
+        {
+          "type": "source",
+          "value": "maximum_age_source"
+        }
+      ],
+      "comparison": "LessThanOrEqual"
+    },
+    {
+      "name": "vip_status_rule",
+      "class": "SimpleComparisonRule",
+      "params": [
+        {
+          "type": "source",
+          "value": "vip_status_source"
+        },
+        {
+          "type": "source",
+          "value": "positive_vip_status"
+        }
+      ],
+      "comparison": "Equal"
+    }
+  ],
+  "engines": [
+    {
+      "name": "complex_engine",
+      "rules": ["air_and_land_miles_rule", "minimum_age_rule", "maximum_age_rule", "vip_status_rule"]
+    }
+  ]
+}
