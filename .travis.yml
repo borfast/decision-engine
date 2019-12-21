@@ -10,7 +10,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 before_install:
-  - pip install pipenv
+  - pip install pipenv scrutinizer-ocular
 install:
   - pipenv install --dev
 script:
@@ -19,7 +19,7 @@ script:
   - coverage run --include=decision_engine/* --omit=tests/* -m pytest
   - coverage xml
   - python-codacy-coverage -r coverage.xml
-after_success:
-  - codecov
 after_script:
+  - ocular
+  - codecov
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
