@@ -7,20 +7,15 @@ from jsonschema import ValidationError
 from decision_engine import parser
 
 
-tests_dir = Path(__file__).parents[0]
-schema_dir = tests_dir.parents[0] / 'decision_engine'
+defs_dir = Path(__file__).parents[0] / 'test_definitions'
+schema_dir = defs_dir.parents[1] / 'decision_engine'
 
 schema_file = 'schema.json'
-schema_path = (schema_dir / schema_file).absolute()
+schema_path = schema_dir / schema_file
 
-test_definition = 'test_definition.json'
-definition_path = (tests_dir / test_definition).absolute()
-
-nested_sources_def = 'test_nested_sources.json'
-nested_sources_def_path = (tests_dir / nested_sources_def)
-
-full_def = 'full_definition.json'
-full_def_path = (tests_dir / full_def)
+definition_path = defs_dir / 'test_definition.json'
+nested_sources_def_path = defs_dir / 'test_nested_sources.json'
+full_def_path = defs_dir / 'full_definition.json'
 
 
 def _load_json_file(file: str) -> dict:
