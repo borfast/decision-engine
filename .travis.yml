@@ -2,6 +2,13 @@ dist: xenial
 language: python
 python:
   - "3.8"
+env:
+  global:
+    - CC_TEST_REPORTER_ID=fb1273a6f13d10a9564769d6f1f04fdbc8e28630be4357da4ce31ecb3aa9810c
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 before_install:
   - pip install pipenv
 install:
@@ -14,3 +21,5 @@ script:
   - python-codacy-coverage -r coverage.xml
 after_success:
   - codecov
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
