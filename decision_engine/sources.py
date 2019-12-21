@@ -10,6 +10,9 @@ class Source(ABC):
     def __init__(self, name: str = None):
         self.name = name
 
+    def __repr__(self):
+        return f"Name: '{self.name}'"
+
     def get_value(self, data: Optional[dict] = None) -> Any:
         pass
 
@@ -18,6 +21,9 @@ class DictSource(Source):
     def __init__(self, key: str, name: str = None) -> None:
         self.key = key
         super().__init__(name)
+
+    def __repr__(self):
+        return f"Name: '{self.name}' | key: '{self.key}'"
 
     def get_value(self, data: Optional[dict] = None) -> Any:
         if data is None:
@@ -30,6 +36,9 @@ class FixedValueSource(Source):
         self.value: Any = value
         super().__init__(name)
 
+    def __repr__(self):
+        return f"Name: '{self.name}' | value: {self.value}"
+
     def get_value(self, data: Optional[dict] = None) -> Any:
         return self.value
 
@@ -41,6 +50,10 @@ class PercentageSource(Source):
         self.percentage = float(percentage)
         self.source = source
         super().__init__(name)
+
+    def __repr__(self):
+        return f"Name: '{self.name}' | percentage: {self.percentage} | " \
+               f"source: '{self.source.name}'"
 
     def get_value(self, data: Optional[dict] = None) -> float:
         return self.source.get_value(data) * self.percentage
@@ -58,6 +71,10 @@ class RandomIntSource(Source):
         self.max_value = max_value
         self.seed = seed
         super().__init__(name)
+
+    def __repr__(self):
+        return f"Name: '{self.name}' | min_value: {self.min_value} | " \
+               f"max_value: {self.max_value} | seed: {self.seed}, "
 
     def get_value(self, data: Optional[dict] = None):
         if self.seed is not None:

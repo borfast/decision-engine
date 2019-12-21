@@ -10,6 +10,9 @@ class Rule:
     def __init__(self, name: str = None):
         self.name = name
 
+    def __repr__(self):
+        return f"Name: '{self.name}'"
+
     @abstractmethod
     def check(self, data: dict) -> bool:
         pass
@@ -23,6 +26,11 @@ class SimpleComparisonRule(Rule):
         self.comparison = comparison
         super().__init__(name)
 
+    def __repr__(self):
+        return f"Name: '{self.name}' | source1: '{self.source1.name}' | " \
+               f"source2: '{self.source2.name}' | " \
+               f"comparison: '{self.comparison.__class__.__name__}'"
+
     def check(self, data: dict) -> bool:
         val1 = self.source1.get_value(data)
         val2 = self.source2.get_value(data)
@@ -34,6 +42,9 @@ class BooleanOrRule(Rule):
         self.rules = rules
         super().__init__(name)
 
+    def __repr__(self):
+        return f"Name: '{self.name}' | rules: {self.rules}"
+
     def check(self, data: dict) -> bool:
         return any([rule.check(data) for rule in self.rules])
 
@@ -42,6 +53,9 @@ class BooleanAndRule(Rule):
     def __init__(self, rules: List[Rule], name: str = None) -> None:
         self.rules = rules
         super().__init__(name)
+
+    def __repr__(self):
+        return f"Name: '{self.name}' | rules: {self.rules}"
 
     def check(self, data: dict) -> bool:
         return all([rule.check(data) for rule in self.rules])

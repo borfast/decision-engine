@@ -11,5 +11,8 @@ class Engine:
         self.rules = rules
         self.name = name
 
+    def __repr__(self):
+        return f"Name: '{self.name}' | rules: {[r.name for r in self.rules]}"
+
     def decide(self, data: dict) -> bool:
         return all([rule.check(data) for rule in self.rules])
