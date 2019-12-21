@@ -1,5 +1,10 @@
 from decision_engine.comparisons import GreaterThan, GreaterThanOrEqual, \
-    LessThan, LessThanOrEqual, Equal, NotEqual
+    LessThan, LessThanOrEqual, Equal, NotEqual, NoOp
+
+
+def test_no_op():
+    comp = NoOp()
+    assert comp.check(False, False)
 
 
 def test_equal():

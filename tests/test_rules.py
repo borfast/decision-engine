@@ -22,6 +22,12 @@ def test_simple_comparison_rule(smoker, expected):
 
     assert rule.check(data) is expected
 
+    comparison_name = rule.comparison.__class__.__name__
+    assert rule.__repr__() == f"Name: '{rule.name}' | " \
+                              f"source1: '{rule.source1.name}' | " \
+                              f"source2: '{rule.source2.name}' | " \
+                              f"comparison: '{comparison_name}'"
+
 
 @pytest.mark.parametrize('colour, expected', [
     ('red', True),
@@ -49,6 +55,7 @@ def test_boolean_or_rule(colour, expected):
     }
 
     assert rule.check(data) is expected
+    assert rule.__repr__() == f"Name: '{rule.name}' | rules: {rule.rules}"
 
 
 @pytest.mark.parametrize('age, smoker, voted_for_trump, expected', [
@@ -88,3 +95,4 @@ def test_boolean_and_rule(age, smoker, voted_for_trump, expected):
     }
 
     assert rule.check(data) is expected
+    assert rule.__repr__() == f"Name: '{rule.name}' | rules: {rule.rules}"

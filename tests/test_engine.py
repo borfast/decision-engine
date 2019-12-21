@@ -18,6 +18,8 @@ def test_single_stupid_rule_engine():
     data = {}
 
     assert engine.decide(data) is True
+    assert engine.__repr__() == f"Name: '{engine.name}' | " \
+                                f"rules: {[r.name for r in engine.rules]}"
 
 
 @pytest.mark.parametrize("salary, expected", [

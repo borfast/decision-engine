@@ -5,8 +5,8 @@ from abc import ABC, abstractmethod
 
 class Comparison(ABC):
     @abstractmethod
-    def check(self, x: Any, y: Any) -> bool:
-        pass
+    def check(self, x: Any, y: Any) -> bool:  # pragma: no cover
+        raise NotImplementedError
 
 
 class NoOp(Comparison):

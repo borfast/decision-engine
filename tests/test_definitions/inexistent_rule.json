@@ -1,0 +1,21 @@
+{
+  "sources": [],
+  "rules": [
+    {
+      "name": "failing_rule",
+      "class": "BooleanAndRule",
+      "params": [
+        {
+          "type": "rule",
+          "value": "inexistent_rule1"
+        },
+        {
+          "type": "rule",
+          "value": "inexistent_rule2"
+        }
+      ],
+      "comparison": "NoOp"
+    }
+  ],
+  "engines": []
+}

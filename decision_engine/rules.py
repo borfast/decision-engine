@@ -1,20 +1,21 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import List
 
 from decision_engine.comparisons import Comparison
 from decision_engine.sources import Source
 
 
-class Rule:
+class Rule(ABC):
     def __init__(self, name: str = None):
         self.name = name
 
+    @abstractmethod
     def __repr__(self):
-        return f"Name: '{self.name}'"
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def check(self, data: dict) -> bool:
-        pass
+        raise NotImplementedError  # pragma: no cover
 
 
 class SimpleComparisonRule(Rule):

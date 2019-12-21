@@ -1,0 +1,20 @@
+{
+  "sources": [
+    {
+      "name": "ten_percent",
+      "class": "PercentageSource",
+      "params": [
+        {
+          "type": "float",
+          "value": 0.75
+        },
+        {
+          "type": "source",
+          "value": "five_thousand"
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "engines": []
+}

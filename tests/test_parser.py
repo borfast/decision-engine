@@ -69,6 +69,17 @@ def test_valid_test_definition():
     parser.validate(definition, schema)
 
 
+@pytest.mark.parametrize('file_name', [
+    'wrong_param_type.json',
+    'inexistent_source.json',
+    'inexistent_rule.json'
+])
+def test_validation_errors(file_name):
+    with pytest.raises(ValidationError):
+        path = defs_dir / file_name
+        parser.parse_json_file(path)
+
+
 @pytest.mark.parametrize("air_miles, land_miles, age, vip, expected", [
     (500, 100, 37, 'yes', True),
     (150, 100, 37, 'yes', False),
@@ -80,8 +91,6 @@ def test_valid_test_definition():
 ])
 def test_fully_parsed_engine(air_miles, land_miles, age, vip, expected):
     engines = parser.parse_json_file(full_def_path)
-
-    print(engines)
 
     engine = engines['engines'][0]
 

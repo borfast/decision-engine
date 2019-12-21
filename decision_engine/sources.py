@@ -6,15 +6,16 @@ from abc import ABC, abstractmethod
 
 
 class Source(ABC):
-    @abstractmethod
     def __init__(self, name: str = None):
         self.name = name
 
+    @abstractmethod
     def __repr__(self):
-        return f"Name: '{self.name}'"
+        raise NotImplementedError  # pragma: no cover
 
+    @abstractmethod
     def get_value(self, data: Optional[dict] = None) -> Any:
-        pass
+        raise NotImplementedError  # pragma: no cover
 
 
 class DictSource(Source):
@@ -74,7 +75,7 @@ class RandomIntSource(Source):
 
     def __repr__(self):
         return f"Name: '{self.name}' | min_value: {self.min_value} | " \
-               f"max_value: {self.max_value} | seed: {self.seed}, "
+               f"max_value: {self.max_value} | seed: {self.seed}"
 
     def get_value(self, data: Optional[dict] = None):
         if self.seed is not None:
