@@ -68,7 +68,7 @@ def parse_sources(sources: List[dict]) -> List[Source]:
         class_name = source['class']
         class_ = getattr(module, class_name)
         params = _parse_source_params(source['params'], final_sources)
-        instance = class_(*params, source['name'])
+        instance = class_(source['name'], *params)
         final_sources.append(instance)
 
     return final_sources

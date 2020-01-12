@@ -10,8 +10,8 @@ from decision_engine.sources import DictSource, FixedValueSource, \
 
 
 def test_single_stupid_rule_engine():
-    hundred = FixedValueSource(100)
-    five_thousand = FixedValueSource(5000)
+    hundred = FixedValueSource('hundred', 100)
+    five_thousand = FixedValueSource('five_thousand', 5000)
     rule = SimpleComparisonRule(five_thousand, hundred, GreaterThanOrEqual())
     engine = Engine([rule])
 
@@ -27,8 +27,9 @@ def test_single_stupid_rule_engine():
     (10000, False)
 ])
 def test_single_rule_engine(salary, expected):
-    salary_percentage = PercentageSource(0.75, DictSource('salary'))
-    minimum_salary = FixedValueSource(50000)
+    salary_percentage = PercentageSource('salary percentage', 0.75,
+                                         DictSource('salary dict', 'salary'))
+    minimum_salary = FixedValueSource('minimum salary', 50000)
     rule = SimpleComparisonRule(salary_percentage, minimum_salary,
                                 GreaterThanOrEqual())
     engine = Engine([rule])
@@ -50,18 +51,19 @@ def test_single_rule_engine(salary, expected):
     (100, 50, 15, 'no', False)
 ])
 def test_multiple_rules_engine(air_miles, land_miles, age, vip, expected):
-    air_miles_source = DictSource('air_miles')
-    minimum_miles_source = FixedValueSource(3500)
+    air_miles_source = DictSource('air miles', 'air_miles')
+    minimum_miles_source = FixedValueSource('minimum air miles', 3500)
     minimum_air_miles_rule = SimpleComparisonRule(air_miles_source,
                                                   minimum_miles_source,
                                                   GreaterThanOrEqual())
 
-    land_miles_source = DictSource('land_miles')
+    land_miles_source = DictSource('land miles', 'land_miles')
     less_land_than_air_miles_rule = SimpleComparisonRule(land_miles_source,
                                                          air_miles_source,
                                                          LessThanOrEqual())
 
-    air_miles_percentage = PercentageSource(0.05, air_miles_source)
+    air_miles_percentage = PercentageSource('air miles percentage', 0.05,
+                                            air_miles_source)
     air_miles_percentage_rule = SimpleComparisonRule(land_miles_source,
                                                      air_miles_percentage,
                                                      GreaterThanOrEqual())
@@ -70,17 +72,17 @@ def test_multiple_rules_engine(air_miles, land_miles, age, vip, expected):
                                               less_land_than_air_miles_rule,
                                               air_miles_percentage_rule])
 
-    age_source = DictSource('age')
-    minimum_age_source = FixedValueSource(21)
+    age_source = DictSource('age', 'age')
+    minimum_age_source = FixedValueSource('minimum age', 21)
     minimum_age_rule = SimpleComparisonRule(age_source, minimum_age_source,
                                             GreaterThanOrEqual())
 
-    maximum_age_source = FixedValueSource(65)
+    maximum_age_source = FixedValueSource('maximum age', 65)
     maximum_age_rule = SimpleComparisonRule(age_source, maximum_age_source,
                                             LessThanOrEqual())
 
-    vip_status_source = DictSource('vip')
-    positive_vip_status = FixedValueSource('yes')
+    vip_status_source = DictSource('vip', 'vip')
+    positive_vip_status = FixedValueSource('is vip', 'yes')
     vip_status_rule = SimpleComparisonRule(vip_status_source,
                                            positive_vip_status,
                                            Equal())

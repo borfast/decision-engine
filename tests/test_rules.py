@@ -12,8 +12,8 @@ from decision_engine.sources import DictSource, FixedValueSource
     (False, True)
 ])
 def test_simple_comparison_rule(smoker, expected):
-    smoker_source = DictSource('smoker')
-    non_smoker_requirement = FixedValueSource(False)
+    smoker_source = DictSource('smoker', 'smoker')
+    non_smoker_requirement = FixedValueSource('smoker req', False)
     rule = SimpleComparisonRule(smoker_source, non_smoker_requirement, Equal())
 
     data = {
@@ -40,10 +40,10 @@ def test_boolean_or_rule(colour, expected):
     """
     The colour source must match at least one of the two required colours.
     """
-    colour_source = DictSource('colour')
-    colour_requirement1 = FixedValueSource('blue')
-    colour_requirement2 = FixedValueSource('red')
-    colour_requirement3 = FixedValueSource('yellow')
+    colour_source = DictSource('colour', 'colour')
+    colour_requirement1 = FixedValueSource('colour req 1', 'blue')
+    colour_requirement2 = FixedValueSource('colour req 2', 'red')
+    colour_requirement3 = FixedValueSource('colour req 3', 'yellow')
     rule1 = SimpleComparisonRule(colour_source, colour_requirement1, Equal())
     rule2 = SimpleComparisonRule(colour_source, colour_requirement2, Equal())
     rule3 = SimpleComparisonRule(colour_source, colour_requirement3, Equal())
@@ -73,17 +73,17 @@ def test_boolean_and_rule(age, smoker, voted_for_trump, expected):
     Only people 18+ years old, non-smokers,
     and who did not vote for Trump are allowed.
     """
-    age_source = DictSource('age')
-    age_requirement = FixedValueSource(18)
+    age_source = DictSource('age', 'age')
+    age_requirement = FixedValueSource('minnimum age', 18)
     rule1 = SimpleComparisonRule(age_source, age_requirement,
                                  GreaterThanOrEqual())
 
-    smoker_source = DictSource('smoker')
-    smoker_requirement = FixedValueSource(False)
+    smoker_source = DictSource('smoker', 'smoker')
+    smoker_requirement = FixedValueSource('smoker requirement', False)
     rule2 = SimpleComparisonRule(smoker_source, smoker_requirement, Equal())
 
-    voter_source = DictSource('voted_for_trump')
-    voter_requirement = FixedValueSource(False)
+    voter_source = DictSource('voter', 'voted_for_trump')
+    voter_requirement = FixedValueSource('voter requirement', False)
     rule3 = SimpleComparisonRule(voter_source, voter_requirement, Equal())
 
     rule = BooleanAndRule([rule1, rule2, rule3])

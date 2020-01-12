@@ -5,6 +5,7 @@ url = "https://pypi.python.org/simple"
 
 [packages]
 jsonschema = "*"
+pydantic = "*"
 
 [dev-packages]
 coverage = "*"

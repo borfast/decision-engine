@@ -2,12 +2,8 @@
   "sources": [
     {
       "name": "outer_source",
-      "class": "PercentageSource",
+      "class": "FixedValueSource",
       "params": [
-        {
-          "type": "float",
-          "value": 0.75
-        },
         {
           "type": "integer",
           "value": 100
