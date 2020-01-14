@@ -25,11 +25,11 @@ def load_json_file(file: str) -> dict:
     return contents
 
 
-def validate(definition: dict, schema: dict):
+def validate(definition: dict, schema: dict) -> None:
     jsonschema.validate(instance=definition, schema=schema)
 
 
-def _check_param_type(param: dict):
+def _check_param_type(param: dict) -> None:
     param_type = param_types_table[param['type']]
     if not isinstance(param['value'], param_type):
         msg = f"Parameter declared with type {param['type']}" \
@@ -38,7 +38,7 @@ def _check_param_type(param: dict):
         raise ValidationError(msg)
 
 
-def _check_source_param_exists(param: dict, sources: dict):
+def _check_source_param_exists(param: dict, sources: dict) -> None:
     if param['value'] not in sources.keys():
         msg = f'Parameter declared as source but specified source ' \
               f'{param["value"]} has not been parsed yet. ' \
@@ -74,7 +74,7 @@ def parse_sources(sources: List[dict]) -> List[Source]:
     return final_sources
 
 
-def _check_rule_param_exists(param: dict, rules: dict):
+def _check_rule_param_exists(param: dict, rules: dict) -> None:
     if param['value'] not in rules.keys():
         msg = f'Parameter declared as rule but specified rule ' \
               f'{param["value"]} has not been parsed yet. ' \
@@ -119,7 +119,7 @@ def parse_rules(rules: List[dict], sources: List[Source]) -> List[Rule]:
         else:
             params.append(comparison_class())
 
-        instance = rules_class(*params, rule['name'])
+        instance = rules_class(rule['name'], *params)
         final_rules.append(instance)
 
     return final_rules
@@ -131,7 +131,7 @@ def parse_engines(engines: List[dict], rules: List[Rule]) -> List[Engine]:
         # Create a new list containing only the rules named in the engine.
         engine_rules = [rule for rule in rules if rule.name in engine['rules']]
 
-        instance = Engine(engine_rules, engine['name'])
+        instance = Engine(engine['name'], engine_rules)
         final_engines.append(instance)
 
     return final_engines

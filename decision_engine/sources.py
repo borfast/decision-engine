@@ -49,7 +49,7 @@ class RandomIntSource(Source):
     max_value: int
     seed: Optional[int] = None
 
-    def get_value(self, data: Optional[dict] = None):
+    def get_value(self, data: Optional[dict] = None) -> int:
         if self.seed is not None:
             random.seed(self.seed)
 

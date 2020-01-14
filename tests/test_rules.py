@@ -14,19 +14,14 @@ from decision_engine.sources import DictSource, FixedValueSource
 def test_simple_comparison_rule(smoker, expected):
     smoker_source = DictSource('smoker', 'smoker')
     non_smoker_requirement = FixedValueSource('smoker req', False)
-    rule = SimpleComparisonRule(smoker_source, non_smoker_requirement, Equal())
+    rule = SimpleComparisonRule('no-smoking rule', smoker_source,
+                                non_smoker_requirement, Equal())
 
     data = {
         'smoker': smoker
     }
 
     assert rule.check(data) is expected
-
-    comparison_name = rule.comparison.__class__.__name__
-    assert rule.__repr__() == f"Name: '{rule.name}' | " \
-                              f"source1: '{rule.source1.name}' | " \
-                              f"source2: '{rule.source2.name}' | " \
-                              f"comparison: '{comparison_name}'"
 
 
 @pytest.mark.parametrize('colour, expected', [
@@ -44,18 +39,20 @@ def test_boolean_or_rule(colour, expected):
     colour_requirement1 = FixedValueSource('colour req 1', 'blue')
     colour_requirement2 = FixedValueSource('colour req 2', 'red')
     colour_requirement3 = FixedValueSource('colour req 3', 'yellow')
-    rule1 = SimpleComparisonRule(colour_source, colour_requirement1, Equal())
-    rule2 = SimpleComparisonRule(colour_source, colour_requirement2, Equal())
-    rule3 = SimpleComparisonRule(colour_source, colour_requirement3, Equal())
+    rule1 = SimpleComparisonRule('rule 1', colour_source, colour_requirement1,
+                                 Equal())
+    rule2 = SimpleComparisonRule('rule 2', colour_source, colour_requirement2,
+                                 Equal())
+    rule3 = SimpleComparisonRule('rule 3', colour_source, colour_requirement3,
+                                 Equal())
 
-    rule = BooleanOrRule([rule1, rule2, rule3])
+    rule = BooleanOrRule('final rule', [rule1, rule2, rule3])
 
     data = {
         'colour': colour
     }
 
     assert rule.check(data) is expected
-    assert rule.__repr__() == f"Name: '{rule.name}' | rules: {rule.rules}"
 
 
 @pytest.mark.parametrize('age, smoker, voted_for_trump, expected', [
@@ -75,18 +72,20 @@ def test_boolean_and_rule(age, smoker, voted_for_trump, expected):
     """
     age_source = DictSource('age', 'age')
     age_requirement = FixedValueSource('minnimum age', 18)
-    rule1 = SimpleComparisonRule(age_source, age_requirement,
+    rule1 = SimpleComparisonRule('rule 1', age_source, age_requirement,
                                  GreaterThanOrEqual())
 
     smoker_source = DictSource('smoker', 'smoker')
     smoker_requirement = FixedValueSource('smoker requirement', False)
-    rule2 = SimpleComparisonRule(smoker_source, smoker_requirement, Equal())
+    rule2 = SimpleComparisonRule('rule 2', smoker_source, smoker_requirement,
+                                 Equal())
 
     voter_source = DictSource('voter', 'voted_for_trump')
     voter_requirement = FixedValueSource('voter requirement', False)
-    rule3 = SimpleComparisonRule(voter_source, voter_requirement, Equal())
+    rule3 = SimpleComparisonRule('rule 3', voter_source, voter_requirement,
+                                 Equal())
 
-    rule = BooleanAndRule([rule1, rule2, rule3])
+    rule = BooleanAndRule('final rule', [rule1, rule2, rule3])
 
     data = {
         'age': age,
@@ -95,4 +94,3 @@ def test_boolean_and_rule(age, smoker, voted_for_trump, expected):
     }
 
     assert rule.check(data) is expected
-    assert rule.__repr__() == f"Name: '{rule.name}' | rules: {rule.rules}"
